@@ -32,6 +32,8 @@ class Cell {
     this.ease = 0.001;
     this.friction = 0.8;
     this.randomize = Math.random() * 10 + 2;
+    // be sito neveiks cell position performance
+    this.start();
   }
   //   custom draw method
   draw(context) {
@@ -48,16 +50,29 @@ class Cell {
     // naujas modelis
     context.strokeRect(this.positionX, this.positionY, this.width, this.height);
   }
+  // be sito neveiks cell position performance
+  start() {
+    this.speedX = (this.x - this.positionX) / this.randomize;
+    this.speedY = (this.y - this.positionY) / this.randomize;
+  }
   update() {
     // img vibration effect
     // this.slideX = Math.random() * 10;
     // this.slideY = Math.random() * 10;
     // distance between two points
     // cell position
-    this.speedX = (this.x - this.positionX) / this.randomize;
-    this.speedY = (this.y - this.positionY) / this.randomize;
-    this.positionX += this.speedX;
-    this.positionY += this.speedY;
+    // save perfomance part of code (second code)
+    if (Math.abs(this.speedX) > 0.1 || Math.abs(this.speedY) > 0.1) {
+      this.speedX = (this.x - this.positionX) / this.randomize;
+      this.speedY = (this.y - this.positionY) / this.randomize;
+      this.positionX += this.speedX;
+      this.positionY += this.speedY;
+    }
+    // first code
+    // this.speedX = (this.x - this.positionX) / this.randomize;
+    // this.speedY = (this.y - this.positionY) / this.randomize;
+    // this.positionX += this.speedX;
+    // this.positionY += this.speedY;
 
     // crop effect
     const dx = this.effect.mouse.x - this.x;
