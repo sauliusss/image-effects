@@ -5,13 +5,16 @@ canvas.height = 700;
 
 class Cell {
   // access to properties main effect class
-  constructor(effect, x, y) {
+  constructor(effect, x, y, index) {
     this.effect = effect;
     this.x = x;
     this.y = y;
+    this.index = index;
     // variables who move the cell itself
     // horizontal
-    this.positionX = this.effect.width * 0.5;
+    // starting position
+    this.positionX = this.effect.width;
+    // ================================
     // Vertical
     this.positionY = this.effect.width * 0.9;
     // Speed X
@@ -30,10 +33,13 @@ class Cell {
     this.vx = 0;
     this.vy = 0;
     this.ease = 0.001;
-    this.friction = 0.8;
-    this.randomize = Math.random() * 10 + 2;
-    // be sito neveiks cell position performance
-    this.start();
+    this.friction = 0.9;
+    this.randomize = Math.random() * 50 + 2;
+    // be sito neveiks cell position performance this.start();
+    // galima pakeisti laika
+    setTimeout(() => {
+      this.start();
+    }, this.index * 10);
   }
   //   custom draw method
   draw(context) {
@@ -67,6 +73,7 @@ class Cell {
       this.speedY = (this.y - this.positionY) / this.randomize;
       this.positionX += this.speedX;
       this.positionY += this.speedY;
+      // console.log(this.index);
     }
     // first code
     // this.speedX = (this.x - this.positionX) / this.randomize;
@@ -127,13 +134,14 @@ class Effect {
   }
   //   organize into a grid
   createGrid() {
+    let index = 0;
     // create grid
     // y = vertical rows
     for (let y = 0; y < this.height; y += this.cellHeight) {
       // x horizontal columns
       for (let x = 0; x < this.width; x += this.cellWidth) {
         // everytime when jump to new cell in the grid, take img grid array(35 kodo eilute) push new cell in there
-        this.imageGrid.push(new Cell(this, x, y));
+        this.imageGrid.push(new Cell(this, x, y, index));
       }
     }
   }
@@ -151,6 +159,7 @@ const effect = new Effect(canvas);
 
 // animation loop to create illusion of movement
 function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   effect.render(ctx);
   requestAnimationFrame(animate);
 }
